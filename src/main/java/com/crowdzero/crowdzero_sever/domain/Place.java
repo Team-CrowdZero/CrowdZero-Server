@@ -1,8 +1,12 @@
 package com.crowdzero.crowdzero_sever.domain;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Entit
+@Entity
+@NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Table(name = "place")
@@ -18,7 +22,4 @@ public class Place {
 
     @Column(name = "image_url")
     private String imageUrl;
-
-    public Place() {
-    }
 }
