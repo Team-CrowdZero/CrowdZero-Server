@@ -2,16 +2,17 @@ package com.crowdzero.crowdzero_sever.domain;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Table(name = "accident")
 public class Accident {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Id 자동 생성
     private Long id;
 
     @Column(name = "acdnt_occr_dt") // 사고 발생 일시
@@ -35,4 +36,15 @@ public class Accident {
     @ManyToOne
     @JoinColumn(name = "area_id", referencedColumnName = "id")
     Place area;
+
+    @Builder // id 자동생성이기도 하고, 항목이 많아 builder 어노테이션 사용하는 게 용이할 것 같아 사용했습니다.
+    public Accident(String acdntOccrDt, String expClrDt, String acdntInfo, Double acdntX, Double acdntY, Double acdntTime, Place area) {
+        this.acdntOccrDt = acdntOccrDt;
+        this.expClrDt = expClrDt;
+        this.acdntInfo = acdntInfo;
+        this.acdntX = acdntX;
+        this.acdntY = acdntY;
+        this.acdntTime = acdntTime;
+        this.area = area;
+    }
 }
