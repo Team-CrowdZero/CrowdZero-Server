@@ -1,7 +1,7 @@
-package com.crowdzero.crowdzero_sever.domain;
+package com.crowdzero.crowdzero_sever.accidentApi.domain;
 
+import com.crowdzero.crowdzero_sever.domain.Place;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,14 +31,14 @@ public class Accident {
     private Double acdntY;
 
     @Column(name = "acdnt_time")
-    private Double acdntTime;
+    private String acdntTime;
 
     @ManyToOne
     @JoinColumn(name = "area_id", referencedColumnName = "id")
     Place area;
 
     @Builder // id 자동생성이기도 하고, 항목이 많아 builder 어노테이션 사용하는 게 용이할 것 같아 사용했습니다.
-    public Accident(String acdntOccrDt, String expClrDt, String acdntInfo, Double acdntX, Double acdntY, Double acdntTime, Place area) {
+    public Accident(String acdntOccrDt, String expClrDt, String acdntInfo, Double acdntX, Double acdntY, String acdntTime, Place area) {
         this.acdntOccrDt = acdntOccrDt;
         this.expClrDt = expClrDt;
         this.acdntInfo = acdntInfo;
