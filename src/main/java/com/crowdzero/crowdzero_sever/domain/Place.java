@@ -19,7 +19,4 @@ public class Place {
 
     @Column(name = "area_cd")
     private String areaCd;
-
-    @Column(name = "image_url")
-    private String imageUrl;
 }
