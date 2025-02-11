@@ -22,11 +22,11 @@ public class ApiResponse<T> {
         return new ApiResponse<>(200, "결과 조회에 성공하였습니다.", null);
     }
 
-    public static ApiResponse<?> badRequest(String message) {
+    public static <T> ApiResponse<T> badRequest(String message) {
         return new ApiResponse<>(400, message, null);
     }
 
-    public static ApiResponse<?> internalServerError() {
+    public static <T> ApiResponse<T> internalServerError() {
         return new ApiResponse<>(500, "서버 내부 오류가 발생하였습니다.", null);
     }
 }
