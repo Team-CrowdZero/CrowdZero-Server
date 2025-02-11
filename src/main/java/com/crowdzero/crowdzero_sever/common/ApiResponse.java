@@ -29,4 +29,8 @@ public class ApiResponse<T> {
     public static <T> ApiResponse<T> internalServerError() {
         return new ApiResponse<>(500, "서버 내부 오류가 발생하였습니다.", null);
     }
+
+    public static <T> ApiResponse<T> error(int code, String message) {
+        return new ApiResponse<>(code, message, null);
+    }
 }
