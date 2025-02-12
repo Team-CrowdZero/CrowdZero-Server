@@ -1,6 +1,5 @@
 package com.crowdzero.crowdzero_sever.accidentApi.service;
 
-import com.crowdzero.crowdzero_sever.accidentApi.domain.Accident;
 import com.crowdzero.crowdzero_sever.accidentApi.domain.AccidentRepository;
 import com.crowdzero.crowdzero_sever.accidentApi.web.dto.AccidentResponseDto;
 import org.springframework.stereotype.Service;
@@ -10,7 +9,11 @@ import java.util.List;
 
 @Service
 public class AccidentService {
-    private AccidentRepository accidentRepository;
+    private final AccidentRepository accidentRepository;
+
+    public AccidentService(AccidentRepository accidentRepository) {
+        this.accidentRepository = accidentRepository;
+    }
 
     public List<AccidentResponseDto> getTodayAccidentsByAreaId(Long areaId) {
         String currentDate = LocalDate.now().toString(); // "2025-02-11" 형식
