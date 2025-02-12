@@ -19,9 +19,8 @@ public class PlaceDataInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) {
         List<Place> places = Arrays.asList(
-                // TODO: 프론트에서 imageUrl 받기
                 new Place(1, "강남역", "POI014"),
-                new Place(2, "광화문 광장", "POI088"),
+                new Place(2, "광화문광장", "POI088"),
                 new Place(3, "삼각지역", "POI030"),
                 new Place(4, "서울역", "POI033"),
                 new Place(5, "여의도", "POI072")
