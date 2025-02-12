@@ -25,7 +25,9 @@ public class AccidentFetchService {
                 );
 
                 if (existingAccident.isPresent()) {
-                    // 기존 데이터가 있으면 업데이트
+                    // 기존 데이터가 있으면 업데이트 - '종료시간', '정보', '최종업데이트시간' 업데이트
+                    // 도로통제 기존 데이터 기준: 좌표값과 사고발생시간이 같은 경우
+                    // 도로 통제의 경우 종료 시간이 바뀌는 경우가 있어서 업데이트로 했는데, API 경우에 맞게 이 부분은 빼거나 수정하면 될 것 같습니다.
                     Accident accidentToUpdate = existingAccident.get();
                     accidentToUpdate.update(newAccident.getExpClrDt(),
                             newAccident.getAcdntInfo(),
