@@ -3,9 +3,11 @@ package com.crowdzero.crowdzero_sever.config;
 import com.crowdzero.crowdzero_sever.domain.Place;
 import com.crowdzero.crowdzero_sever.repository.PlaceRepository;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Component
@@ -20,11 +22,11 @@ public class PlaceDataInitializer implements CommandLineRunner {
     public void run(String... args) {
         List<Place> places = Arrays.asList(
                 // TODO: 프론트에서 imageUrl 받기
-                new Place(1, "강남역", "POI014", ""),
-                new Place(2, "광화문 광장", "POI088", ""),
-                new Place(3, "삼각지역", "POI030", ""),
-                new Place(4, "서울역", "POI033", ""),
-                new Place(5, "여의도", "POI072", "")
+                new Place(1, "강남역", "POI014", Collections.emptyList()),
+                new Place(2, "광화문 광장", "POI088", Collections.emptyList()),
+                new Place(3, "삼각지역", "POI030", Collections.emptyList()),
+                new Place(4, "서울역", "POI033", Collections.emptyList()),
+                new Place(5, "여의도", "POI072", Collections.emptyList())
         );
 
         // 초기 데이터가 없는 경우에만 저장

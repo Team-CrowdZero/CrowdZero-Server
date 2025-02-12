@@ -1,8 +1,17 @@
 package com.crowdzero.crowdzero_sever.domain;
 
+import com.crowdzero.crowdzero_sever.populationApi.domain.Population;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
 @Table(name = "place")
 public class Place {
     @Id
@@ -14,32 +23,6 @@ public class Place {
     @Column(name = "area_cd")
     private String areaCd;
 
-    @Column(name = "image_url")
-    private String imageUrl;
-
-    public Place() {
-    }
-
-    public Place(int id, String areaCd, String areaNm, String imageUrl) {
-        this.id = id;
-        this.areaCd = areaCd;
-        this.areaNm = areaNm;
-        this.imageUrl = imageUrl;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public String getAreaNm() {
-        return areaNm;
-    }
-
-    public String getAreaCd() {
-        return areaCd;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
+    @OneToMany(mappedBy = "place", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Population> population = new ArrayList<>();
 }
