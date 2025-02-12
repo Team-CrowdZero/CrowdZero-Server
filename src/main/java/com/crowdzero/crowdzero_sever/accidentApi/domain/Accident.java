@@ -30,7 +30,7 @@ public class Accident {
     @Column(name = "acdnt_y") // 사고 통제 지점 X 좌표
     private Double acdntY;
 
-    @Column(name = "acdnt_time")
+    @Column(name = "acdnt_time") // 사고 업데이트 시간
     private String acdntTime;
 
     @ManyToOne
@@ -46,5 +46,11 @@ public class Accident {
         this.acdntY = acdntY;
         this.acdntTime = acdntTime;
         this.area = area;
+    }
+
+    public void update(String expClrDt, String acdntInfo, String acdntTime) {
+        this.expClrDt = expClrDt;
+        this.acdntInfo = acdntInfo;
+        this.acdntTime = acdntTime;
     }
 }

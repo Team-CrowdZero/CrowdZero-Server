@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -16,14 +17,30 @@ public class AccidentFetchService {
     private final AccidentRepository accidentRepository;
 
     public void saveAccidentData(List<Accident> accidentDataList) {
-        for (Accident accident : accidentDataList) {
+        for (Accident newAccident : accidentDataList) {
             try {
-                accidentRepository.save(accident);
+                Optional<Accident> existingAccident = accidentRepository.findExistingAccident(
+                        newAccident.getAcdntX(), newAccident.getAcdntY(),
+                        newAccident.getArea().getId(), newAccident.getAcdntOccrDt()
+                );
+
+                if (existingAccident.isPresent()) {
+                    // 기존 데이터가 있으면 업데이트
+                    Accident accidentToUpdate = existingAccident.get();
+                    accidentToUpdate.update(newAccident.getExpClrDt(),
+                            newAccident.getAcdntInfo(),
+                            newAccident.getAcdntTime());
+                    accidentRepository.save(accidentToUpdate);
+                } else {
+                    // 기존 데이터가 없으면 새로 저장
+                    accidentRepository.save(newAccident);
+                }
+
             } catch (Exception e) {
-                log.error("Error saving accident data: {}", accident, e);
+                log.error("Error saving accident data: {}", newAccident, e);
             }
         }
 
-        log.info("Saved {} accident records to the database.", accidentDataList.size());
+        log.info("Processed {} accident records.", accidentDataList.size());
     }
 }
