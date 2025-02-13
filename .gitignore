@@ -19,7 +19,6 @@ bin/
 
 ### IntelliJ IDEA ###
 application-key.properties
-
 .idea
 *.iws
 *.iml
