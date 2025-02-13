@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,6 +19,9 @@ public class AccidentFetchService {
     private final AccidentRepository accidentRepository;
 
     public void saveAccidentData(List<Accident> accidentDataList) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"); // 날짜 포맷 맞추기
+        String currentTime = LocalDateTime.now().format(formatter);
+
         for (Accident newAccident : accidentDataList) {
             try {
                 Optional<Accident> existingAccident = accidentRepository.findExistingAccident(
@@ -25,9 +30,6 @@ public class AccidentFetchService {
                 );
 
                 if (existingAccident.isPresent()) {
-                    // 기존 데이터가 있으면 업데이트 - '종료시간', '정보', '최종업데이트시간' 업데이트
-                    // 도로통제 기존 데이터 기준: 좌표값과 사고발생시간이 같은 경우
-                    // 도로 통제의 경우 종료 시간이 바뀌는 경우가 있어서 업데이트로 했는데, API 경우에 맞게 이 부분은 빼거나 수정하면 될 것 같습니다.
                     Accident accidentToUpdate = existingAccident.get();
                     accidentToUpdate.update(newAccident.getExpClrDt(),
                             newAccident.getAcdntInfo(),
@@ -36,6 +38,15 @@ public class AccidentFetchService {
                 } else {
                     // 기존 데이터가 없으면 새로 저장
                     accidentRepository.save(newAccident);
+
+                    // 특정 장소에 20개 초과 데이터가 있으면 오래된 데이터 삭제 (단, exp_clr_dt가 지난 것 중에서만 삭제)
+                    int areaId = newAccident.getArea().getId();
+                    List<Accident> expiredRecords = accidentRepository.findOldestRecordsByArea(areaId, currentTime);
+                    Long count = accidentRepository.countByAreaId(areaId);
+
+                    if (count > 20 && !expiredRecords.isEmpty()) {
+                        accidentRepository.delete(expiredRecords.get(0)); // exp_clr_dt가 지난 데이터 중 가장 오래된 것 삭제
+                    }
                 }
 
             } catch (Exception e) {
