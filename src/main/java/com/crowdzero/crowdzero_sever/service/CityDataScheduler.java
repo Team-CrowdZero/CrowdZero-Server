@@ -1,5 +1,8 @@
 package com.crowdzero.crowdzero_sever.service;
 
+import com.crowdzero.crowdzero_sever.accidentApi.AccidentParser;
+import com.crowdzero.crowdzero_sever.accidentApi.domain.Accident;
+import com.crowdzero.crowdzero_sever.accidentApi.service.AccidentFetchService;
 import com.crowdzero.crowdzero_sever.common.CityDataClient;
 import com.crowdzero.crowdzero_sever.domain.Place;
 import com.crowdzero.crowdzero_sever.populationApi.Parser.PopulationParser;
@@ -20,43 +23,35 @@ import java.util.Map;
 public class CityDataScheduler {
     private final PlaceRepository placeRepository;
     private final CityDataClient cityDataClient;
+
+    private final AccidentParser accidentParser;
+    private final AccidentFetchService accidentFetchService;
+
     private final PopulationParser populationParser;
     private final PopulationFetchService populationFetchService;
 
-    @Scheduled(fixedRate = 90000) // 90초마다 실행
+    @Scheduled(fixedRate = 30 * 60 * 1000) // 30분마다 실행 // 30분마다 실행 TODO: 정시나 30분마다 실행되도록 수정 요망 1 30 
     public void fetchAndStoreCityData() {
-        log.info("🔄 fetchAndStoreCityData() 실행됨");
-
         try {
             List<Place> places = placeRepository.findAll();
-            log.info("📍 총 {}개 장소 데이터 조회", places.size());
-
             Map<String, String> cityDataMap = cityDataClient.fetchMultipleCityData(places);
 
             for (Place place : places) {
-                log.info("📡 Fetching data for place: {}", place.getAreaNm());
-
                 String jsonData = cityDataMap.get(place.getAreaNm());
-                log.debug("📄 Received JSON: {}", jsonData);
-
                 if (jsonData != null) {
-                    // 인구 데이터 파싱
+                    List<Accident> parsedAccidentData = accidentParser.parse(jsonData, place); // 도로통제 파싱 명렁어
                     List<Population> parsedPopulationData = populationParser.parse(jsonData, place);
-                    log.info("📊 Parsed Population Data Count: {}", parsedPopulationData.size());
+                    // TODO: 날씨 파싱 명령어
 
-                    // 데이터 저장
-                    if (!parsedPopulationData.isEmpty()) {
-                        populationFetchService.savePopulationData(parsedPopulationData);
-                        log.info("✅ Population data saved for: {}", place.getAreaNm());
-                    } else {
-                        log.warn("⚠️ No population data parsed for: {}", place.getAreaNm());
-                    }
-                } else {
-                    log.warn("⚠️ No data received for place: {}", place.getAreaNm());
+                    accidentFetchService.saveAccidentData(parsedAccidentData); // 도로통제 저장 명렁어
+                    populationFetchService.savePopulationData(parsedPopulationData)
+                    // TODO: 날씨 저장 명령어
+
+                    log.info("Successfully saved data for: {}", place.getAreaNm());
                 }
             }
         } catch (Exception e) {
-            log.error("❌ Error fetching or storing population data: ", e);
+            log.error("Error fetching or storing data: ", e);
         }
     }
 }
