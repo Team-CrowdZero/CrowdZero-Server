@@ -27,4 +27,8 @@ public class Place {
     @OneToMany(mappedBy = "place", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Population> population = new ArrayList<>();
 
+    public Place(int id, String areaNm, String areaCd) {        //PlaceDataInitializer에서 사용
+        this.areaNm = areaNm;
+        this.areaCd = areaCd;
+    }
 }
