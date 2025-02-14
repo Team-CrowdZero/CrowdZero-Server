@@ -4,7 +4,7 @@ import com.crowdzero.crowdzero_sever.accidentApi.domain.Accident;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor // TODO: service 코드 작성 후 RequiredArgsConstructor로 변경
+@NoArgsConstructor
 @Getter
 public class AccidentResponseDto {
     private Long id;

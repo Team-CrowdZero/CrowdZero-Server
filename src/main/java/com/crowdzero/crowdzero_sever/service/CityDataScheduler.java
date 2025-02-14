@@ -47,11 +47,11 @@ public class CityDataScheduler {
                 if (jsonData != null) {
                     List<Accident> parsedAccidentData = accidentParser.parse(jsonData, place); // 도로통제 파싱 명렁어
                     List<Population> parsedPopulationData = populationParser.parse(jsonData, place);
-                    Weather parsedWeatherData = weatherParser.parse(jsonData,place); // TODO: 날씨 파싱 명령어
+                    Weather parsedWeatherData = weatherParser.parse(jsonData,place);
 
                     accidentFetchService.saveAccidentData(parsedAccidentData); // 도로통제 저장 명렁어
                     populationFetchService.savePopulationData(parsedPopulationData);
-                    weatherFetchService.saveWeatherData(parsedWeatherData);// TODO: 날씨 저장 명령어
+                    weatherFetchService.saveWeatherData(parsedWeatherData);
 
                     log.info("Successfully saved data for: {}", place.getAreaNm());
                 }
