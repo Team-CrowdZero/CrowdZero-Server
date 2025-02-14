@@ -45,4 +45,14 @@ public class Population {
         this.ppltnTime = ppltnTime;
         this.place = place;
     }
+
+    public void update(Population newPopulation) {
+        this.areaCongestLvl = newPopulation.areaCongestLvl;
+        this.areaCongestMsg = newPopulation.areaCongestMsg;
+        this.areaPpltnMax = newPopulation.areaPpltnMax;
+        this.areaPpltnMin = newPopulation.areaPpltnMin;
+        this.ppltnTime = newPopulation.ppltnTime;
+        this.place = newPopulation.place;
+    }
+
 }
