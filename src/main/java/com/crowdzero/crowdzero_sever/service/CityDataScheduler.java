@@ -30,7 +30,7 @@ public class CityDataScheduler {
     private final PopulationParser populationParser;
     private final PopulationFetchService populationFetchService;
 
-    @Scheduled(fixedRate = 30 * 60 * 1000) // 30분마다 실행 // 30분마다 실행 TODO: 정시나 30분마다 실행되도록 수정 요망 1 30 
+    @Scheduled(fixedRate = 3 * 60 * 1000) // 30분마다 실행
     public void fetchAndStoreCityData() {
         try {
             List<Place> places = placeRepository.findAll();
@@ -44,7 +44,7 @@ public class CityDataScheduler {
                     // TODO: 날씨 파싱 명령어
 
                     accidentFetchService.saveAccidentData(parsedAccidentData); // 도로통제 저장 명렁어
-                    populationFetchService.savePopulationData(parsedPopulationData)
+                    populationFetchService.savePopulationData(parsedPopulationData);
                     // TODO: 날씨 저장 명령어
 
                     log.info("Successfully saved data for: {}", place.getAreaNm());
