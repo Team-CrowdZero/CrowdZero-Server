@@ -30,7 +30,7 @@ public class CityDataScheduler {
     private final PopulationParser populationParser;
     private final PopulationFetchService populationFetchService;
 
-    @Scheduled(fixedRate = 3 * 60 * 1000) // 30분마다 실행
+    @Scheduled(fixedRate = 30 * 60 * 1000) // 30분마다 실행
     public void fetchAndStoreCityData() {
         try {
             List<Place> places = placeRepository.findAll();
