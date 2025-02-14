@@ -44,7 +44,7 @@ public class CityDataScheduler {
                     // TODO: 날씨 파싱 명령어
 
                     accidentFetchService.saveAccidentData(parsedAccidentData); // 도로통제 저장 명렁어
-                    populationFetchService.savePopulationData(parsedPopulationData)
+                    populationFetchService.savePopulationData(parsedPopulationData);
                     // TODO: 날씨 저장 명령어
 
                     log.info("Successfully saved data for: {}", place.getAreaNm());
