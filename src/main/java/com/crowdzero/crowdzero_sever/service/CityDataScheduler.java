@@ -9,6 +9,9 @@ import com.crowdzero.crowdzero_sever.populationApi.Parser.PopulationParser;
 import com.crowdzero.crowdzero_sever.populationApi.domain.Population;
 import com.crowdzero.crowdzero_sever.populationApi.service.PopulationFetchService;
 import com.crowdzero.crowdzero_sever.repository.PlaceRepository;
+import com.crowdzero.crowdzero_sever.weatherApi.WeatherParser;
+import com.crowdzero.crowdzero_sever.weatherApi.domain.Weather;
+import com.crowdzero.crowdzero_sever.weatherApi.service.WeatherFetchService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -30,6 +33,9 @@ public class CityDataScheduler {
     private final PopulationParser populationParser;
     private final PopulationFetchService populationFetchService;
 
+    private final WeatherParser weatherParser;
+    private final WeatherFetchService weatherFetchService;
+
     @Scheduled(fixedRate = 30 * 60 * 1000) // 30분마다 실행
     public void fetchAndStoreCityData() {
         try {
@@ -41,11 +47,11 @@ public class CityDataScheduler {
                 if (jsonData != null) {
                     List<Accident> parsedAccidentData = accidentParser.parse(jsonData, place); // 도로통제 파싱 명렁어
                     List<Population> parsedPopulationData = populationParser.parse(jsonData, place);
-                    // TODO: 날씨 파싱 명령어
+                    Weather parsedWeatherData = weatherParser.parse(jsonData,place);
 
                     accidentFetchService.saveAccidentData(parsedAccidentData); // 도로통제 저장 명렁어
                     populationFetchService.savePopulationData(parsedPopulationData);
-                    // TODO: 날씨 저장 명령어
+                    weatherFetchService.saveWeatherData(parsedWeatherData);
 
                     log.info("Successfully saved data for: {}", place.getAreaNm());
                 }

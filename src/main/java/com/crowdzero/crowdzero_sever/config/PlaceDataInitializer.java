@@ -21,7 +21,6 @@ public class PlaceDataInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) {
         List<Place> places = Arrays.asList(
-          
                 new Place(1, "강남역", "POI014"),
                 new Place(2, "광화문광장", "POI088"),
                 new Place(3, "삼각지역", "POI030"),
