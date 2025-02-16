@@ -34,7 +34,7 @@ public class Assembly {
     private String jurisdiction;
 
     @Column(name = "district")
-    private String district;       //행정구역(동)
+    private String district;    //행정구역(동)
 
 
     @Builder
@@ -45,15 +45,6 @@ public class Assembly {
         this.assemblyPopulation = assemblyPopulation;
         this.jurisdiction = jurisdiction;
         this.district = district;
-    }
-
-    public void update(Population newPopulation) {
-        this.date = newPopulation.date;
-        this.assemblyTime = newPopulation.assemblyTime;
-        this.assemblyPlace = newPopulation.assemblyPlace;
-        this.assemblyPopulation = newPopulation.assemblyPopulation;
-        this.jurisdiction = newPopulation.jurisdiction;
-        this.district = newPopulation.district;
     }
 
 }
