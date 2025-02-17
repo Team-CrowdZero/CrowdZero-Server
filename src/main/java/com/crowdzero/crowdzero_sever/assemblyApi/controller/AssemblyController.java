@@ -7,6 +7,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 @RestController
@@ -24,11 +28,45 @@ public class AssemblyController {
         return "집회 데이터가 저장되었습니다.";
     }
 
+    //집회 정보 get api
     @GetMapping("/{date}")
     public ApiResponse<List<AssemblyResponseDto>> getAssembliesByDate(@PathVariable String date) {
-        validateDate(date);  // 컨트롤러에서 직접 유효성 검사
-        List<AssemblyResponseDto> assemblyListData = assemblyService.getAssembliesByDate(date);
+        String formattedDate = formatDate(date);
+
+        List<AssemblyResponseDto> assemblyListData = assemblyService.getAssembliesByDate(formattedDate);
+        if (assemblyListData.isEmpty()) {   //날짜가 DB에 없을 때
+            String notAssemblyMsg = "해당 날짜에 대한 집회 정보가 없습니다.";
+            return ApiResponse.badRequest(notAssemblyMsg);
+        }
         return ApiResponse.success(assemblyListData);
+    }
+
+    /**
+     * "yyyy-MM-dd" → "yyyy년 M월 d일 (요일)" 형식으로 변환
+     */
+    private String formatDate(String date) {
+        try {
+            LocalDate localDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            DayOfWeek dayOfWeek = localDate.getDayOfWeek();
+            String koreanDay = getKoreanDayOfWeek(dayOfWeek);
+            return localDate.format(DateTimeFormatter.ofPattern("yyyy년 M월 d일")) + " (" + koreanDay + ")";
+        } catch (DateTimeParseException e) {
+            throw new IllegalArgumentException("잘못된 날짜 형식입니다. (예: 2025-02-16)");
+        }
+    }
+
+    // 요일 변환 (월~일)
+    private String getKoreanDayOfWeek(DayOfWeek dayOfWeek) {
+        switch (dayOfWeek) {
+            case MONDAY: return "월";
+            case TUESDAY: return "화";
+            case WEDNESDAY: return "수";
+            case THURSDAY: return "목";
+            case FRIDAY: return "금";
+            case SATURDAY: return "토";
+            case SUNDAY: return "일";
+            default: return "";
+        }
     }
 
     /**
@@ -63,14 +101,4 @@ public class AssemblyController {
         return ApiResponse.error(520, "알 수 없는 오류가 발생했습니다: " + e.getMessage());
     }
 
-    /**
-     * 날짜 검증 로직
-     */
-    // TODO: 반환 값 api 명세서와 같이 써서 수정하기
-    private void validateDate(String date) {
-        List<AssemblyResponseDto> assemblies = assemblyService.getAssembliesByDate(date);
-        if (assemblies.isEmpty()) {
-            throw new IllegalArgumentException("해당 날짜에 대한 집회 데이터가 존재하지 않습니다: " + date);
-        }
-    }
 }

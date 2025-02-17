@@ -1,7 +1,6 @@
 package com.crowdzero.crowdzero_sever.assemblyApi.domain;
 
 
-import com.crowdzero.crowdzero_sever.populationApi.domain.Population;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
