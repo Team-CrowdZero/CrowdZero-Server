@@ -4,7 +4,9 @@ import com.crowdzero.crowdzero_sever.assemblyApi.domain.Assembly;
 import com.crowdzero.crowdzero_sever.assemblyApi.dto.AssemblyResponseDto;
 import com.crowdzero.crowdzero_sever.assemblyApi.repository.AssemblyRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -20,6 +22,11 @@ public class AssemblyService {
 
     private static final String API_URL = "https://crowdzero-ml-production-fcc0.up.railway.app/get_protests";
 
+    /**
+     * 매일 자정(00:00)에 기존 데이터를 삭제하고 새로운 데이터를 저장
+     */
+    @Scheduled(cron = "0 0 0 * * *") // 매일 자정 실행
+    @Transactional
     public void fetchAndSaveAssemblies() {
         // 외부 API 호출
         String response = restTemplate.getForObject(API_URL, String.class);
@@ -37,7 +44,7 @@ public class AssemblyService {
             String jurisdiction = protest.getString("관할서");
             String district = protest.getString("행정구역(동)");
 
-            // 🔹 "신고 인원" 값 처리 (쉼표 제거 및 숫자로 변환)
+            //  "신고 인원" 값 처리 (쉼표 제거 및 숫자로 변환)
             int assemblyPopulation = 0;
             if (protest.has("신고 인원") && !protest.isNull("신고 인원")) {
                 String populationStr = protest.getString("신고 인원").replace(",", ""); // 쉼표 제거
@@ -60,7 +67,8 @@ public class AssemblyService {
             assemblies.add(assembly);
         }
 
-        // 🔹 H2 데이터베이스에 저장
+        // 데이터 베이스에 저장
+        assemblyRepository.deleteAll();
         assemblyRepository.saveAll(assemblies);
     }
 
