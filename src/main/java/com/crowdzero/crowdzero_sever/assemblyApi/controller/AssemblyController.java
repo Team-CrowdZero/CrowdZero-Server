@@ -19,14 +19,6 @@ import java.util.List;
 public class AssemblyController {
     private final AssemblyService assemblyService;
 
-    /**
-     * API에서 데이터를 가져와서 MySQL에 저장하는 엔드포인트
-     */
-    @PostMapping("/fetch")
-    public String fetchAndSaveAssemblies() {
-        assemblyService.fetchAndSaveAssemblies();
-        return "집회 데이터가 저장되었습니다.";
-    }
 
     //집회 정보 get api
     @GetMapping("/{date}")
